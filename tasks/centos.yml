@@ -1,0 +1,50 @@
+- name: Installing Jenkins on Centos 7.
+  when: ansible_distribution|lower == "centos"
+  block:
+    - name: Install depends.
+      yum:
+        name:
+          - "java-11-openjdk"
+          - "epel-release"
+        state: present
+        update_cache: true
+    - name: Import Jenkins key.
+      rpm_key:
+        key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+        state: present
+    - name: Add Jenkins repo.
+      yum_repository:
+        name: jenkins
+        state: present
+        description: Jenkins-stable
+        baseurl: http://pkg.jenkins.io/redhat-stable
+        gpgcakey: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+        gpgcheck: true
+        enabled: true
+    - name: Installing Jenkins-stable.
+      yum:
+        name:
+          - "jenkins"
+        state: present
+        update_cache: true
+    - name: Enable and started jenkins service.
+      service:
+        name: "jenkins"
+        state: started
+        enabled: true
+    - name: Allow jenkins 8080/tcp port.
+      firewalld:
+        port: 8080/tcp
+        zone: 'public'
+        permanent: true
+        state: enabled
+        immediate: true
+      ignore_errors: true
+    - command: "cat /var/lib/jenkins/secrets/initialAdminPassword"
+      register: command_output
+    - debug:
+        msg: "initialAdminPassword for {{ inventory_hostname }}={{ command_output.stdout }}"
+    - name: Jenkins url.
+      debug:
+        msg: "jenkins url for {{ inventory_hostname }}=http://{{ ansible_default_ipv4.address }}:8080/"
+...

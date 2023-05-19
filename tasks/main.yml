@@ -1,0 +1,9 @@
+---
+# tasks file for aramadan.jenkins
+- name: Import ubuntu tasks.
+  include_tasks: ubuntu.yml
+  tags: ubuntu
+- name: Import centos tasks.
+  include_tasks: centos.yml
+  tags: centos
+...
