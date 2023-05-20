@@ -1,6 +1,6 @@
 galaxy_info:
   author: Ahmed Ramadan
-  description: Install jenkins on CentOS 7 and Ubuntu 22.04
+  description: Install jenkins on CentOS/RedHat/Alma/Rocky and Debian/Ubuntu.
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
