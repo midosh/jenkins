@@ -3,7 +3,7 @@ jenkins
 
 A simple Ansible role for installing jenkins for CentOS/Red Hat/Alma/Rocky and Debian/Ubuntu.
 
-=========
+
 Requirements
 ------------
 
