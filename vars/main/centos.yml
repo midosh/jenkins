@@ -1,0 +1,4 @@
+---
+rpm_key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+baseurl: http://pkg.jenkins.io/redhat-stable
+...

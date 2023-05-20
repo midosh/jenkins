@@ -1,0 +1,30 @@
+---
+- name: Install epel repo.
+  when: ansible_distribution|lower == "centos" or ansible_os_family|lower == "redhat"
+  block:
+    - name: Check if EPEL repo is already configured.
+      stat:
+        path: "{{ epel_repofile_path }}"
+      register: epel_result
+
+    - name: Import EPEL GPG key.
+      rpm_key:
+        key: "{{ epel_repo_gpg_key_url }}"
+        state: present
+      register: result
+      until: result is succeeded
+      retries: 5
+      delay: 10
+      when: not epel_result.stat.exists
+
+    - name: Install EPEL repo.
+      yum:
+        name: "{{ epel_repo_url }}"
+        state: present
+        update_cache: true
+      register: result
+      until: result is succeeded
+      retries: 5
+      delay: 10
+      when: not epel_result.stat.exists
+...

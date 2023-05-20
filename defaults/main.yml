@@ -1,2 +1,5 @@
 ---
 # defaults file for aramadan.jenkins
+jenkins_package: jenkins
+jenkins_service: jenkins
+jenkins_port: 8080

@@ -1,35 +1,35 @@
 - name: Installing Jenkins on Centos 7.
   when: ansible_distribution|lower == "centos"
   block:
-    - name: Install depends.
+    # - name: Install epel repo.
+    #   yum:
+    #     name: "epel-release"
+    #     state: present
+    #     update_cache: true
+    - name: Install java.
       yum:
-        name:
-          - "java-11-openjdk"
-          - "epel-release"
+        name: "java-11-openjdk"
         state: present
-        update_cache: true
     - name: Import Jenkins key.
       rpm_key:
-        key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+        key: "{{ rpm_key }}"
         state: present
     - name: Add Jenkins repo.
       yum_repository:
         name: jenkins
         state: present
         description: Jenkins-stable
-        baseurl: http://pkg.jenkins.io/redhat-stable
-        gpgcakey: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+        baseurl: "{{ baseurl }}"
+        gpgcakey: "{{ rpm_key }}"
         gpgcheck: true
         enabled: true
     - name: Installing Jenkins-stable.
       yum:
-        name:
-          - "jenkins"
+        name: "{{ jenkins_package }}"
         state: present
-        update_cache: true
     - name: Enable and started jenkins service.
       service:
-        name: "jenkins"
+        name: "{{ jenkins_service }}"
         state: started
         enabled: true
     - name: Allow jenkins 8080/tcp port.

@@ -3,6 +3,9 @@
 - name: Import ubuntu tasks.
   include_tasks: ubuntu.yml
   tags: ubuntu
+- name: Import epel tasks.
+  include_tasks: epel-repo.yml
+  tags: epel
 - name: Import centos tasks.
   include_tasks: centos.yml
   tags: centos

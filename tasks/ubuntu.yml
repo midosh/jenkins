@@ -1,6 +1,6 @@
 ---
 - name: Installing Jenkins on Ubuntu 22.04.
-  when: ansible_distribution|lower == 'ubuntu'
+  when: ansible_distribution|lower == 'ubuntu' or ansible_os_family|lower == "debian"
   block:
     - name: Install depends.
       apt:
@@ -8,28 +8,27 @@
         state: present
     - name: Add an Apt siging key.
       get_url:
-        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-        dest: /usr/share/keyrings/jenkins-keyring.asc
+        url: "{{ apt_key }}"
+        dest: "{{ key_path }}"
         force: true
     - name: Add Jenkins repo.
       apt_repository:
-        repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
+        repo: "{{ apt_repo }}"
         state: present
-        filename: 'jenkins'
+        filename: "{{ jenkins_package }}"
         update_cache: true
     - name: Install Jenkins package.
       apt:
-        name:
-          - "jenkins"
+        name: "{{ jenkins_package }}"
         state: present
     - name: Start and enable Jenkins service.
       service:
-        name: "jenkins"
+        name: "{{ jenkins_service }}"
         state: started
         enabled: true
     - name: Allow 8080/tcp port.
       ufw:
-        port: '8080'
+        port: "{{ jenkins_port }}"
         proto: 'tcp'
         rule: allow
         comment: Allow jenkins port
